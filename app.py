@@ -14,7 +14,7 @@ def api_articles():
 def api_article(articleid):
     return 'You are reading ' + articleid
 
-@app.route('/send')
+@app.route('/send', methods=['GET','POST'])
 def api_receive():
 	global counter
 	counter += 1
