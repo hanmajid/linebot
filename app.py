@@ -1,5 +1,6 @@
 from flask import Flask, url_for
 app = Flask(__name__)
+counter = 0
 
 @app.route('/')
 def api_root():
@@ -13,5 +14,13 @@ def api_articles():
 def api_article(articleid):
     return 'You are reading ' + articleid
 
+@app.route('/send')
+def api_receive():
+	global counter
+	counter += 1
+	return 'Added to list, counter : ' + str(counter)
+
 if __name__ == '__main__':
-    app.run()
+	# counter = 0
+	print "counter : " + str(counter)
+	app.run()
