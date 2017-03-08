@@ -27,8 +27,8 @@ def callback():
 	# Request body string
 	print request.headers
 	print "BODY==========="
-	print request.body
 	body = request.get_data(as_text=True)
+	print body
 	hash = hmac.new(channel_secret.encode('utf-8'), body.encode('utf-8'), hashlib.sha256).digest()
 	signature = request.headers['X-Line-Signature']
 
