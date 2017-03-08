@@ -26,9 +26,11 @@ def callback():
 	channel_secret = 'ab4a046624a52e60f5a3ffe253be1729' # Channel secret string
 	# Request body string
 	print request.headers
+	print "BODY==========="
+	print request.body
 	body = request.get_data(as_text=True)
 	hash = hmac.new(channel_secret.encode('utf-8'), body.encode('utf-8'), hashlib.sha256).digest()
-	signature = base64.b64encode(hash)
+	signature = request.headers['X-Line-Signature']
 
     # get request body as text
 	app.logger.info("Request body: " + body)
