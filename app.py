@@ -1,4 +1,7 @@
 from flask import Flask, request, abort
+import base64
+import hashlib
+import hmac
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -19,19 +22,23 @@ handler = WebhookHandler('ab4a046624a52e60f5a3ffe253be1729')
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
-    signature = request.META['HTTP_X_LINE_SIGNATURE']
+    # signature = request.headers['X-LINE-SIGNATURE']
+	channel_secret = 'ab4a046624a52e60f5a3ffe253be1729' # Channel secret string
+	# Request body string
+	body = request.get_data(as_text=True)
+	hash = hmac.new(channel_secret.encode('utf-8'), body.encode('utf-8'), hashlib.sha256).digest()
+	signature = base64.b64encode(hash)
 
     # get request body as text
-    body = request.get_data(as_text=True)
-    app.logger.info("Request body: " + body)
+	app.logger.info("Request body: " + body)
 
     # handle webhook body
-    try:
-        handler.handle(body, signature)
-    except InvalidSignatureError:
-        abort(400)
+	try:
+		handler.handle(body, signature)
+	except InvalidSignatureError:
+		abort(400)
 
-    return 'OK'
+	return 'OK'
 
 
 @handler.add(MessageEvent, message=TextMessage)
